@@ -153,3 +153,5 @@ CREATE TABLE Sale_Item (
     FOREIGN KEY (S_ID) REFERENCES Sale(S_ID),
     FOREIGN KEY (Book_ID) REFERENCES Book(Book_ID)
 );
+```
+![DSD.png](../../Downloads/DSD.png)
