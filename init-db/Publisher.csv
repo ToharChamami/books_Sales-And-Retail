@@ -1,0 +1,501 @@
+P_ID,Publisher_Name
+1,Lawrence Group Publishing
+2,Reed-Robinson Publishing
+3,Diaz LLC Publishing
+4,Hensley-Clayton Publishing
+5,"Bridges, Weaver and Holloway Publishing"
+6,Perry-Torres Publishing
+7,Johnson-Martin Publishing
+8,Mcclure Ltd Publishing
+9,"Jensen, Carney and Davenport Publishing"
+10,Wolf-Flores Publishing
+11,Marshall LLC Publishing
+12,Petersen LLC Publishing
+13,"Reed, Allen and Simon Publishing"
+14,Mcguire Inc Publishing
+15,Hays Ltd Publishing
+16,Carpenter-Gonzalez Publishing
+17,Rogers-Lambert Publishing
+18,Stephens-Zamora Publishing
+19,Reese-Jacobs Publishing
+20,Horton-Gibson Publishing
+21,Harris-Young Publishing
+22,"Hammond, Riley and Brown Publishing"
+23,Ellison Group Publishing
+24,"Johnson, Gilbert and Fitzpatrick Publishing"
+25,Knight and Sons Publishing
+26,Rodriguez-Bell Publishing
+27,Holmes and Sons Publishing
+28,Wolfe-Baker Publishing
+29,Miller and Sons Publishing
+30,Williams-Steele Publishing
+31,"Kemp, Johnson and Miller Publishing"
+32,Gomez Group Publishing
+33,Peterson Ltd Publishing
+34,Jackson-Parsons Publishing
+35,"Arellano, Smith and Meyers Publishing"
+36,"Morgan, Thompson and Poole Publishing"
+37,Gonzalez-Roberson Publishing
+38,Duncan and Sons Publishing
+39,"James, Wheeler and Kelly Publishing"
+40,Fields PLC Publishing
+41,Johnson and Sons Publishing
+42,"Lane, Perkins and Hunter Publishing"
+43,Hendricks Inc Publishing
+44,"Jackson, Huff and Hogan Publishing"
+45,Johnson Ltd Publishing
+46,"Green, Wise and Gutierrez Publishing"
+47,Martinez-Vargas Publishing
+48,"Jensen, Torres and Todd Publishing"
+49,Martinez-Miller Publishing
+50,Keith Ltd Publishing
+51,Cooper Group Publishing
+52,Hull-Harper Publishing
+53,Barker Group Publishing
+54,"Johnson, Terry and Rich Publishing"
+55,"Richardson, Gilbert and Hall Publishing"
+56,"Martin, Franklin and Henry Publishing"
+57,Hoffman-Ramirez Publishing
+58,Singleton-Adams Publishing
+59,"Rogers, Harrison and Allen Publishing"
+60,Schmidt-Castro Publishing
+61,Brooks PLC Publishing
+62,Hayes-Snyder Publishing
+63,Hughes and Sons Publishing
+64,Gonzalez-Jordan Publishing
+65,Gardner-Malone Publishing
+66,Goodwin Group Publishing
+67,Burton Ltd Publishing
+68,Wheeler PLC Publishing
+69,"Callahan, Livingston and Bowman Publishing"
+70,Hall LLC Publishing
+71,George Group Publishing
+72,"Levy, Brock and Andrade Publishing"
+73,Coleman Ltd Publishing
+74,Morris-Kane Publishing
+75,"Reynolds, Hodges and Delgado Publishing"
+76,Robertson LLC Publishing
+77,Giles Ltd Publishing
+78,Williams Group Publishing
+79,Graham Group Publishing
+80,"Brown, Ware and Zimmerman Publishing"
+81,Morris and Sons Publishing
+82,"Martinez, Richard and Boyd Publishing"
+83,Wilkinson Ltd Publishing
+84,Lewis-Harrison Publishing
+85,Williams LLC Publishing
+86,Rubio LLC Publishing
+87,"Kelly, Peck and Johnson Publishing"
+88,"Bowen, Patterson and Phillips Publishing"
+89,Bowman-Guerra Publishing
+90,Kent Ltd Publishing
+91,"Frazier, Peterson and Campos Publishing"
+92,Bryan Ltd Publishing
+93,"Mccann, Harmon and Wheeler Publishing"
+94,Evans Ltd Publishing
+95,Garcia PLC Publishing
+96,Sherman LLC Publishing
+97,"Wilson, Garcia and Mcmillan Publishing"
+98,"Smith, Harmon and Diaz Publishing"
+99,Clark-Stewart Publishing
+100,Deleon-Williamson Publishing
+101,Garcia-Oliver Publishing
+102,Luna Group Publishing
+103,Freeman Ltd Publishing
+104,Smith-Yu Publishing
+105,Harrison and Sons Publishing
+106,Hickman-Jackson Publishing
+107,Murphy PLC Publishing
+108,Brewer PLC Publishing
+109,Torres-Hill Publishing
+110,Roberts-Hughes Publishing
+111,"Lewis, Cobb and Castro Publishing"
+112,Summers-Andrews Publishing
+113,"Martinez, Hayes and Richards Publishing"
+114,Sanchez and Sons Publishing
+115,Bernard-Flores Publishing
+116,"Mitchell, Adams and Martin Publishing"
+117,"Jackson, Ortiz and Snyder Publishing"
+118,Riggs and Sons Publishing
+119,"Hogan, Mckay and White Publishing"
+120,Rich Ltd Publishing
+121,"Lawson, Turner and Branch Publishing"
+122,"Ramirez, Bell and Garcia Publishing"
+123,Becker LLC Publishing
+124,Richardson-Phillips Publishing
+125,Harrison-Alvarez Publishing
+126,Garcia PLC Publishing
+127,Walker and Sons Publishing
+128,Brown-Santiago Publishing
+129,Orozco-Yang Publishing
+130,"Morris, Bennett and Guzman Publishing"
+131,Moore Ltd Publishing
+132,"Vega, Davidson and Mcgrath Publishing"
+133,"Gibbs, Lewis and Rosales Publishing"
+134,Beard-Garcia Publishing
+135,Steele-Mccall Publishing
+136,Mcconnell Inc Publishing
+137,"Griffin, Klein and Ochoa Publishing"
+138,Rogers and Sons Publishing
+139,Mcmahon-Anderson Publishing
+140,Clayton PLC Publishing
+141,White Ltd Publishing
+142,Rogers and Sons Publishing
+143,Armstrong PLC Publishing
+144,Poole PLC Publishing
+145,Booker Ltd Publishing
+146,Torres-Dunn Publishing
+147,Wilson Inc Publishing
+148,Garcia Ltd Publishing
+149,Tyler and Sons Publishing
+150,Colon Inc Publishing
+151,Parrish-King Publishing
+152,Patterson-Burch Publishing
+153,Trujillo LLC Publishing
+154,"Grant, Webster and Avila Publishing"
+155,Johnson LLC Publishing
+156,Davis-Hansen Publishing
+157,Waller and Sons Publishing
+158,Whitney and Sons Publishing
+159,Hawkins and Sons Publishing
+160,Turner-Webb Publishing
+161,"Chan, Watson and Ruiz Publishing"
+162,Ruiz and Sons Publishing
+163,Ferguson LLC Publishing
+164,Gilbert-Dixon Publishing
+165,"Welch, Miller and Brown Publishing"
+166,Wright Ltd Publishing
+167,James-Pearson Publishing
+168,Howell-Strong Publishing
+169,"Anderson, Roberson and Green Publishing"
+170,Rosales-Parker Publishing
+171,"Keller, Matthews and Howard Publishing"
+172,Smith Group Publishing
+173,Lawrence and Sons Publishing
+174,Porter-Rodriguez Publishing
+175,Watson-Martinez Publishing
+176,Strong Group Publishing
+177,"Pierce, Smith and Velasquez Publishing"
+178,"Santos, Scott and Moss Publishing"
+179,Melendez Group Publishing
+180,Wood-Brown Publishing
+181,Smith Inc Publishing
+182,"Reid, Hernandez and Ortiz Publishing"
+183,Deleon Inc Publishing
+184,Harrell-Chang Publishing
+185,Velasquez and Sons Publishing
+186,Hill PLC Publishing
+187,"Kirby, Zuniga and Stephens Publishing"
+188,Ingram-Klein Publishing
+189,Johnson Group Publishing
+190,"Andersen, Johnston and Pittman Publishing"
+191,Park LLC Publishing
+192,Mueller Inc Publishing
+193,"Shelton, Martinez and Rich Publishing"
+194,Burns-Phillips Publishing
+195,Tran Inc Publishing
+196,"Silva, Alexander and Brown Publishing"
+197,"Roberson, Owens and Warren Publishing"
+198,"Reyes, Shields and Chan Publishing"
+199,Fischer-Jones Publishing
+200,"Stewart, Jordan and Miller Publishing"
+201,Brown Group Publishing
+202,Smith-Goodwin Publishing
+203,"Smith, Good and Alvarado Publishing"
+204,"Salazar, Carr and Ware Publishing"
+205,White-Bailey Publishing
+206,Miller-Morrison Publishing
+207,"Wilson, Meyers and Robinson Publishing"
+208,"White, Nguyen and Brown Publishing"
+209,"Flowers, Foley and Weber Publishing"
+210,Hughes Inc Publishing
+211,Clark PLC Publishing
+212,"Mclaughlin, Brown and Stein Publishing"
+213,"Martin, Rodriguez and Owen Publishing"
+214,James-Boyd Publishing
+215,Hunter-Brooks Publishing
+216,"Lee, Miller and Watson Publishing"
+217,"Walters, Rivera and Jordan Publishing"
+218,Nelson-Nelson Publishing
+219,"Crosby, Anderson and Sanders Publishing"
+220,Clements-Moss Publishing
+221,Brown-Johnson Publishing
+222,"Bennett, Guzman and Hughes Publishing"
+223,"Stafford, Benitez and Miller Publishing"
+224,"Collins, Wallace and Lambert Publishing"
+225,Sanders-Stokes Publishing
+226,"Williams, Hughes and Keith Publishing"
+227,"Cox, Manning and Harris Publishing"
+228,Hill and Sons Publishing
+229,"Scott, Griffin and Mccann Publishing"
+230,Green-Hunt Publishing
+231,Macias Inc Publishing
+232,Allen LLC Publishing
+233,"Wilson, Barr and Wilson Publishing"
+234,"Cordova, Sanchez and Brewer Publishing"
+235,Miller-Brewer Publishing
+236,"Day, Brown and Hester Publishing"
+237,Fletcher Group Publishing
+238,Lee Inc Publishing
+239,Hopkins LLC Publishing
+240,"Gilbert, Crawford and Davis Publishing"
+241,"Vasquez, Goodwin and George Publishing"
+242,Christensen-Mccullough Publishing
+243,Guerrero-Nelson Publishing
+244,"Zimmerman, Garcia and Hernandez Publishing"
+245,"Ruiz, Walton and Poole Publishing"
+246,Fowler and Sons Publishing
+247,Gonzalez-Deleon Publishing
+248,"Hernandez, Richardson and Harper Publishing"
+249,"Cortez, Miller and Payne Publishing"
+250,Matthews-Tanner Publishing
+251,Simpson and Sons Publishing
+252,Young Ltd Publishing
+253,"Fischer, Allen and Allen Publishing"
+254,Estrada Inc Publishing
+255,Patterson-Horne Publishing
+256,"Neal, Howard and Weiss Publishing"
+257,Burns Inc Publishing
+258,Luna Group Publishing
+259,Griffin and Sons Publishing
+260,"Johnson, Williams and Harris Publishing"
+261,Barnes Ltd Publishing
+262,"Foster, Montgomery and Black Publishing"
+263,Thomas Ltd Publishing
+264,Mccullough-Young Publishing
+265,Johnson Group Publishing
+266,Hawkins-Little Publishing
+267,"Park, Pitts and Sims Publishing"
+268,Wells-Williams Publishing
+269,Ortiz Group Publishing
+270,Allen-Lowe Publishing
+271,Hampton and Sons Publishing
+272,"Villegas, Hood and Parks Publishing"
+273,"Davidson, Guzman and Smith Publishing"
+274,"Cox, Figueroa and Mccann Publishing"
+275,"Cobb, Stokes and Porter Publishing"
+276,"Coleman, Watson and Gray Publishing"
+277,Bishop LLC Publishing
+278,"Rodriguez, Hardy and Moore Publishing"
+279,"Wyatt, Smith and Frederick Publishing"
+280,Velasquez PLC Publishing
+281,Gross-Wade Publishing
+282,"Stewart, Richardson and Wilson Publishing"
+283,Russell and Sons Publishing
+284,"Melendez, Hobbs and Hernandez Publishing"
+285,"Hodges, Vaughn and Cross Publishing"
+286,Delacruz LLC Publishing
+287,"Cox, Miller and Reeves Publishing"
+288,"Keller, Ward and Freeman Publishing"
+289,Harris-Williams Publishing
+290,"Aguirre, Williams and Brown Publishing"
+291,Marshall-Carrillo Publishing
+292,Austin-Cox Publishing
+293,"Castro, Ortiz and Nolan Publishing"
+294,Shaw Ltd Publishing
+295,Lopez-Hill Publishing
+296,Barnes-Robinson Publishing
+297,Dawson-Walters Publishing
+298,Mann PLC Publishing
+299,"Brandt, Reeves and Brooks Publishing"
+300,Lopez and Sons Publishing
+301,"Mcgee, Perez and Kelly Publishing"
+302,Johnson Inc Publishing
+303,Ferguson-Baird Publishing
+304,Jones PLC Publishing
+305,"West, Cooper and Jefferson Publishing"
+306,Scott PLC Publishing
+307,George LLC Publishing
+308,Hall-Valentine Publishing
+309,"Tate, Williams and Graves Publishing"
+310,Johnson-Gentry Publishing
+311,Mitchell Inc Publishing
+312,Norris-Hicks Publishing
+313,Chan LLC Publishing
+314,Henry-King Publishing
+315,Schultz-Stein Publishing
+316,"Gutierrez, Munoz and Snyder Publishing"
+317,Lee-Fields Publishing
+318,Smith-Hart Publishing
+319,Robertson Ltd Publishing
+320,Moody Group Publishing
+321,Alexander-Coleman Publishing
+322,Green PLC Publishing
+323,"Moore, Garcia and Camacho Publishing"
+324,Allen LLC Publishing
+325,"Gillespie, Saunders and Johnson Publishing"
+326,Parker Group Publishing
+327,"Lloyd, Bridges and Horn Publishing"
+328,Gardner Inc Publishing
+329,Leblanc-Ellis Publishing
+330,"Thompson, Sanders and Kirby Publishing"
+331,Beck LLC Publishing
+332,"Cruz, Moore and Rogers Publishing"
+333,Sanders-Wilson Publishing
+334,Wright-Christian Publishing
+335,"Pena, Nguyen and Wallace Publishing"
+336,Ramirez-Ballard Publishing
+337,"Chase, Scott and Carr Publishing"
+338,Myers-Meyer Publishing
+339,Gonzalez-Clark Publishing
+340,Anderson LLC Publishing
+341,"Campos, Sullivan and Morris Publishing"
+342,"Ford, Wong and Brown Publishing"
+343,"Meadows, Fuller and Cisneros Publishing"
+344,"Booth, Perez and Diaz Publishing"
+345,Reyes Inc Publishing
+346,Moore Ltd Publishing
+347,Smith-Wong Publishing
+348,Wright and Sons Publishing
+349,Lang-Gray Publishing
+350,Dominguez-Carey Publishing
+351,Carter-Washington Publishing
+352,"Hall, Davis and Johnson Publishing"
+353,Rush-Brown Publishing
+354,Walsh-Graves Publishing
+355,"Mendoza, Collins and Hill Publishing"
+356,"Brooks, Garcia and Haynes Publishing"
+357,"Richmond, Gonzalez and Curtis Publishing"
+358,Tanner-Gilbert Publishing
+359,"Johnson, Sloan and Smith Publishing"
+360,"Davis, Mitchell and Duke Publishing"
+361,"Fleming, Ramirez and Davis Publishing"
+362,"Nielsen, Miller and West Publishing"
+363,Lewis LLC Publishing
+364,"Trevino, Owens and Hogan Publishing"
+365,Curry PLC Publishing
+366,Hartman Inc Publishing
+367,Cannon-Sandoval Publishing
+368,Cantrell-Barrett Publishing
+369,Brown PLC Publishing
+370,"Mckenzie, Smith and Clark Publishing"
+371,Thomas-Merritt Publishing
+372,"Baxter, Choi and Elliott Publishing"
+373,Jordan LLC Publishing
+374,"Silva, Hammond and Sullivan Publishing"
+375,Robbins and Sons Publishing
+376,Li-Stephens Publishing
+377,Mitchell PLC Publishing
+378,"Wallace, Herrera and Wu Publishing"
+379,"Little, Wilson and Sanders Publishing"
+380,"Waller, Torres and Clark Publishing"
+381,Andrews-Griffin Publishing
+382,Barnett PLC Publishing
+383,Blackwell-Fleming Publishing
+384,"Harris, Baker and Dyer Publishing"
+385,Williams LLC Publishing
+386,Hardy-Smith Publishing
+387,Campbell-Gardner Publishing
+388,Wang-Rodgers Publishing
+389,"Evans, Carr and Sanchez Publishing"
+390,Jones-Gonzales Publishing
+391,"Collier, Simmons and Mcbride Publishing"
+392,Young-Jones Publishing
+393,"Boyd, Fletcher and Graham Publishing"
+394,"Taylor, Rogers and Martin Publishing"
+395,"Reed, Castillo and Spears Publishing"
+396,Peterson-Garcia Publishing
+397,Thompson Ltd Publishing
+398,"Walton, Daugherty and Torres Publishing"
+399,Cain-Weber Publishing
+400,Martinez-Austin Publishing
+401,"Ramos, Marsh and Hernandez Publishing"
+402,"Short, Arnold and Zimmerman Publishing"
+403,Stevens and Sons Publishing
+404,Hernandez-Carrillo Publishing
+405,Hunt-Contreras Publishing
+406,Paul-Stone Publishing
+407,"Hammond, Frazier and Montes Publishing"
+408,Robertson Inc Publishing
+409,Roberson Group Publishing
+410,"Rodriguez, Moore and Sandoval Publishing"
+411,Williams-Allen Publishing
+412,"Juarez, Phillips and Maddox Publishing"
+413,"Martin, Short and Galvan Publishing"
+414,Mosley LLC Publishing
+415,"Farrell, Walter and Evans Publishing"
+416,"Graham, Taylor and Simpson Publishing"
+417,Mccoy-Gonzalez Publishing
+418,Hernandez and Sons Publishing
+419,"Mathews, Jones and Bowman Publishing"
+420,Gordon-Smith Publishing
+421,Allen-Rodriguez Publishing
+422,Douglas LLC Publishing
+423,Gardner Inc Publishing
+424,"Aguilar, Elliott and Arroyo Publishing"
+425,Davis-King Publishing
+426,Holmes-Nicholson Publishing
+427,Snyder-Skinner Publishing
+428,"Nixon, Barrera and Cabrera Publishing"
+429,"Martinez, Wilson and Rogers Publishing"
+430,Buck-Ware Publishing
+431,Gonzalez-Young Publishing
+432,Guerrero-Evans Publishing
+433,Chapman Ltd Publishing
+434,Mcneil Inc Publishing
+435,"Hopkins, Ortiz and Chase Publishing"
+436,"Davidson, Ray and Carter Publishing"
+437,Clark and Sons Publishing
+438,Roberts-Bowen Publishing
+439,Smith Inc Publishing
+440,Anderson LLC Publishing
+441,Johns-Lee Publishing
+442,Wood and Sons Publishing
+443,Henry Group Publishing
+444,Anderson-Fox Publishing
+445,Bowman PLC Publishing
+446,"Burns, Lee and Phillips Publishing"
+447,Williams Group Publishing
+448,Lozano-Montoya Publishing
+449,Cunningham-Rodriguez Publishing
+450,Vaughn-Mccoy Publishing
+451,Robinson and Sons Publishing
+452,"Yates, Stanley and Mack Publishing"
+453,"Briggs, Harris and Wallace Publishing"
+454,Hernandez Group Publishing
+455,"Baker, Lambert and Kramer Publishing"
+456,"Peterson, Beck and Ford Publishing"
+457,"Oliver, Monroe and Reilly Publishing"
+458,Vargas Ltd Publishing
+459,Fernandez and Sons Publishing
+460,"Moore, Burke and Perkins Publishing"
+461,"Russo, Johns and Schultz Publishing"
+462,Williams-Cameron Publishing
+463,Kim-Mayo Publishing
+464,Parker-Cunningham Publishing
+465,Collins Inc Publishing
+466,"Padilla, Coleman and Dorsey Publishing"
+467,"Webster, Bell and Thomas Publishing"
+468,Johnson Ltd Publishing
+469,Spencer-Griffin Publishing
+470,"Stewart, Norris and Oliver Publishing"
+471,"Scott, Arnold and Jacobson Publishing"
+472,Johnson-Jackson Publishing
+473,"Cortez, Hudson and Reid Publishing"
+474,Hunter-Rodriguez Publishing
+475,"Stewart, Williams and Avila Publishing"
+476,Lee-Sawyer Publishing
+477,Carter Group Publishing
+478,"Stuart, King and Nelson Publishing"
+479,Jones Inc Publishing
+480,Smith-Hardin Publishing
+481,Mosley-Baldwin Publishing
+482,"Barrett, Harris and Avery Publishing"
+483,Aguirre and Sons Publishing
+484,Knight Inc Publishing
+485,"Martinez, Smith and Serrano Publishing"
+486,"Boyd, Flores and Davis Publishing"
+487,Rodriguez PLC Publishing
+488,Harrington-Combs Publishing
+489,"Bishop, Williams and Thompson Publishing"
+490,Fernandez-Nelson Publishing
+491,Garcia-Alvarez Publishing
+492,Mccoy-Santiago Publishing
+493,Schroeder-Lawson Publishing
+494,Cordova and Sons Publishing
+495,"Golden, Carpenter and Moore Publishing"
+496,"Larson, Gonzales and Rice Publishing"
+497,"Willis, Mccarthy and Cummings Publishing"
+498,"Martinez, Moore and Gentry Publishing"
+499,"Reed, Nguyen and Moore Publishing"
+500,"Cole, Garcia and Norman Publishing"
