@@ -155,3 +155,29 @@ CREATE TABLE Sale_Item (
 );
 ```
 ![DSD.png](../../Downloads/DSD.png)
+
+---
+
+## Phase 4: Data Population, Backup & Restore
+
+### 1. Data Population Methods
+The database was populated using three distinct methods to reach over 20,000 records:
+* **Python (Faker Library):** Generated mass data for Sales and Customers.
+* **CSV Import:** Imported structured data for Branches, Publishers, and Inventory.
+* **Mockaroo:** Generated the Employee table in SQL format.
+
+### 2. Backup & Restore Procedures
+To ensure data durability, I implemented two backup strategies:
+1. **Full Backup (Custom Format):** A complete binary backup of the database.
+2. **Schema-Only Backup:** A backup of the table structures.
+
+#### **Restore Verification**
+The backup was tested by restoring it into a new database named `books_restore_test`. 
+* **Verification Query:** `SELECT COUNT(*) FROM Sale;`
+* **Result:** The system successfully recovered all records.
+
+#### **System Proof (Screenshots):**
+![Backup Process1](screenshot-backup1.png)
+![Backup Process2](screenshot-backup2.png)
+![Restore Success](screenshot-restore1.png)
+![Data Verification](screenshot-restore2.png)
