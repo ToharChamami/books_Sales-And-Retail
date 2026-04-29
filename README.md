@@ -177,7 +177,8 @@ The script generates relational data while maintaining referential integrity bet
 * **CSV Import:** Imported structured data for Branches, Publishers, and Inventory.
 
 ![img_11.png](img_11.png)
-
+![img_12.png](img_12.png)
+![img_14.png](img_14.png)
 * **Mockaroo:** Generated the Employee table in SQL format.
 
 
