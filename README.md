@@ -68,7 +68,7 @@ In this phase, I converted the ERD into a relational schema. Each table was anal
 
 ### 2. SQL Data Definition Language (DDL)
 The following SQL commands implement the design in the PostgreSQL database:
-
+The full SQL script can be found in init-db/01-schema.sql
 ```sql
 -- 1. Simple Entities
 CREATE TABLE Genre (
@@ -154,8 +154,7 @@ CREATE TABLE Sale_Item (
     FOREIGN KEY (Book_ID) REFERENCES Book(Book_ID)
 );
 ```
-![DSD.png](../../Downloads/DSD.png)
-
+![img_6.png](img_6.png)
 ---
 
 ## Phase 4: Data Population, Backup & Restore
