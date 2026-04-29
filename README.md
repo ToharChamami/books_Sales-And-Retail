@@ -1,3 +1,6 @@
+Tohar Levi-Chamami 215108549
+Eden Naomi-Hashay 210042453
+
 # books_Sales-And-Retail
 
 1.Introduction and System Description.
@@ -45,9 +48,14 @@ Below is the characterization of the four screens.
 
 ---
 
-## Phase 3: Database Schema Design (DSD) & Normalization
+## Phase 3: ERD & Database Schema Design (DSD) & Normalization
 
-### 1. Database Normalization Analysis
+### 1. Conceptual Design - Entity Relationship Diagram (ERD)
+
+Based on the system screens and user requirements characterized in Phase 2, I have designed the following ERD (Entity Relationship Diagram). This diagram models the 10 core entities and the relationships required to support the application logic
+![img_7.png](img_7.png)
+
+### 2. Database Normalization Analysis
 In this phase, I converted the ERD into a relational schema. Each table was analyzed to ensure it meets the requirements of **BCNF (Boyce-Codd Normal Form)** or **3NF**, minimizing redundancy and ensuring data integrity.
 
 | Table Name | Functional Dependencies (FDs) | Normalization Level | Logic / Justification |
@@ -66,7 +74,7 @@ In this phase, I converted the ERD into a relational schema. Each table was anal
 
 ---
 
-### 2. SQL Data Definition Language (DDL)
+### 3. SQL Data Definition Language (DDL)
 The following SQL commands implement the design in the PostgreSQL database:
 The full SQL script can be found in init-db/01-schema.sql
 ```sql
@@ -162,8 +170,16 @@ CREATE TABLE Sale_Item (
 ### 1. Data Population Methods
 The database was populated using three distinct methods to reach over 20,000 records:
 * **Python (Faker Library):** Generated mass data for Sales and Customers.
+The script generates relational data while maintaining referential integrity between tables.
+![img_12.png](img_8.png)
+![img_9.png](img_9.png)
+
 * **CSV Import:** Imported structured data for Branches, Publishers, and Inventory.
+
+![img_11.png](img_11.png)
+
 * **Mockaroo:** Generated the Employee table in SQL format.
+
 
 ### 2. Backup & Restore Procedures
 To ensure data durability, I implemented two backup strategies:
