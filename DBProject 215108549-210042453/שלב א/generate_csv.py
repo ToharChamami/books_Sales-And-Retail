@@ -7,7 +7,7 @@ fake = Faker()
 
 def generate_csvs():
     # 1. טבלת סניפים (Branch) - 500 רשומות
-    with open('Branch.csv', mode='w', newline='', encoding='utf-8') as file:
+    with open('../../init-db/Branch.csv', mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow(['Branch_ID', 'Branch_Name', 'City', 'Address', 'Manager_ID'])
         for i in range(1, 501):
@@ -17,7 +17,7 @@ def generate_csvs():
     print("Branch.csv created successfully with 500 rows.")
 
     # 2. טבלת הוצאות לאור (Publisher) - 500 רשומות
-    with open('Publisher.csv', mode='w', newline='', encoding='utf-8') as file:
+    with open('../../init-db/Publisher.csv', mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow(['P_ID', 'Publisher_Name'])
         for i in range(1, 501):
@@ -25,7 +25,7 @@ def generate_csvs():
     print("Publisher.csv created successfully with 500 rows.")
 
     # 3. טבלת מלאי (Inventory) - 500 רשומות
-    with open('Inventory.csv', mode='w', newline='', encoding='utf-8') as file:
+    with open('../../init-db/Inventory.csv', mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow(['Branch_ID', 'Book_ID', 'Quantity'])
 

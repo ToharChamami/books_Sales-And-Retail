@@ -2,7 +2,7 @@ import random
 from faker import Faker
 
 fake = Faker()
-output_file = '02-seed_data.sql'
+output_file = '../DBProject 215108549-210042453/שלב א/02-seed_data.sql'
 
 def generate_data():
     with open(output_file, 'w', encoding='utf-8') as f:

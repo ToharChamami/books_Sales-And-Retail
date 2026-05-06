@@ -13,7 +13,7 @@ CREATE TABLE Branch (
     Branch_Name VARCHAR(255) NOT NULL,
     City VARCHAR(255),
     Address VARCHAR(255),
-    Manager_ID INT
+    Manager_ID INTD
 );
 
 CREATE TABLE Customer (

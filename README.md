@@ -55,6 +55,105 @@ Below is the characterization of the four screens.
 Based on the system screens and user requirements characterized in Phase 2, I have designed the following ERD (Entity Relationship Diagram). This diagram models the 10 core entities and the relationships required to support the application logic
 ![img_7.png](img_7.png)
 
+### Data Dictionary
+
+#### 1. Table: Genre
+**Purpose:** Manages book categories to ensure data consistency and avoid duplication.
+
+| Column Name | Data Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| **G_ID** | INT | PRIMARY KEY | Unique identifier for each genre. |
+| **Genre_Name** | VARCHAR(255) | NOT NULL | The name of the category (e.g., Fiction, Science, History). |
+
+#### 2. Table: Publisher
+**Purpose:** Stores information about the publishing houses the bookstore works with.
+
+| Column Name | Data Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| **P_ID** | INT | PRIMARY KEY | Unique identifier for the publisher. |
+| **Publisher_Name** | VARCHAR(255) | NOT NULL | The official name of the publishing house. |
+
+#### 3. Table: Branch
+**Purpose:** Manages physical bookstore locations and logistics.
+
+| Column Name | Data Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| **Branch_ID** | INT | PRIMARY KEY | Unique branch identification number. |
+| **Branch_Name** | VARCHAR(255) | NOT NULL | Name of the specific branch. |
+| **City** | VARCHAR(255) | - | The city where the branch is located. |
+| **Address** | VARCHAR(255) | - | Full physical address of the branch. |
+| **Manager_ID** | INT | - | ID of the employee managing this branch. |
+
+#### 4. Table: Customer
+**Purpose:** Maintains records for bookstore customers and loyalty club members.
+
+| Column Name | Data Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| **C_ID** | INT | PRIMARY KEY | Unique customer identification number. |
+| **Full_Name** | VARCHAR(255) | NOT NULL | Full name of the customer. |
+| **Phone** | VARCHAR(50) | - | Contact phone number. |
+| **Email** | VARCHAR(255) | - | Customer's email address. |
+| **Join_Date** | DATE | - | The date the customer joined the system (Significant Date 1). |
+| **Loyalty_Info** | JSON | - | Flexible data regarding points and rewards in JSON format. |
+
+#### 5. Table: Employee
+**Purpose:** Manages human resources and staff assignments across branches.
+
+| Column Name | Data Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| **E_ID** | INT | PRIMARY KEY | Unique employee identification number. |
+| **First_Name** | VARCHAR(255) | NOT NULL | Employee's first name. |
+| **Last_Name** | VARCHAR(255) | NOT NULL | Employee's last name. |
+| **Position** | VARCHAR(255) | - | The job title/role of the employee. |
+| **Hire_Date** | DATE | - | The date the employee started working. |
+| **Salary** | DECIMAL(10,2) | - | Monthly salary with two decimal precision. |
+| **Branch_ID** | INT | FOREIGN KEY | Links the employee to their assigned branch. |
+
+#### 6. Table: Book
+**Purpose:** The central catalog of all book titles available in the retail network.
+
+| Column Name | Data Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| **Book_ID** | INT | PRIMARY KEY | Unique identifier for the book (e.g., ISBN). |
+| **Title** | VARCHAR(255) | NOT NULL | The title of the book. |
+| **Author** | VARCHAR(255) | - | The name of the book's author. |
+| **Price** | DECIMAL(10,2) | - | The catalog price of the book. |
+| **Publication_Date**| DATE | - | Official release date (Significant Date 2). |
+| **B_Data** | JSON | - | Additional metadata and attributes in JSON format. |
+| **G_ID** | INT | FOREIGN KEY | Links the book to its respective Genre. |
+| **P_ID** | INT | FOREIGN KEY | Links the book to its respective Publisher. |
+
+#### 7. Table: Sale
+**Purpose:** Records the header information for every sales transaction.
+
+| Column Name | Data Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| **S_ID** | INT | PRIMARY KEY | Unique transaction/invoice number. |
+| **Sale_Date** | DATE | - | The date the transaction occurred. |
+| **Total_Amount** | DECIMAL(10,2) | - | Final total amount paid for the transaction. |
+| **Payment_Method** | VARCHAR(50) | - | Method of payment (e.g., Cash, Credit Card). |
+| **Receipt_Data** | JSON | - | Digital copy of the receipt stored in JSON. |
+| **C_ID** | INT | FOREIGN KEY | The customer who made the purchase. |
+| **E_ID** | INT | FOREIGN KEY | The employee who processed the sale. |
+
+#### 8. Table: Inventory
+**Purpose:** Manages the M:N relationship between branches and books.
+
+| Column Name | Data Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| **Branch_ID** | INT | PK, FK | Link to the specific branch. |
+| **Book_ID** | INT | PK, FK | Link to the specific book. |
+| **Quantity** | INT | DEFAULT 0 | Number of copies currently in stock at this branch. |
+
+#### 9. Table: Sale_Item
+**Purpose:** Detail table recording each specific book included in a sale.
+
+| Column Name | Data Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| **S_ID** | INT | PK, FK | Link to the main Sale record. |
+| **Book_ID** | INT | PK, FK | Link to the specific book purchased. |
+| **Quantity** | INT | NOT NULL | The number of units purchased in this transaction. |
+
 ### 2. Database Normalization Analysis
 In this phase, I converted the ERD into a relational schema. Each table was analyzed to ensure it meets the requirements of **BCNF (Boyce-Codd Normal Form)** or **3NF**, minimizing redundancy and ensuring data integrity.
 
