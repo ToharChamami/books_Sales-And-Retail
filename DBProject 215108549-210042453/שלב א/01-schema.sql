@@ -13,12 +13,13 @@ CREATE TABLE Branch (
     Branch_Name VARCHAR(255) NOT NULL,
     City VARCHAR(255),
     Address VARCHAR(255),
-    Manager_ID INTD
+    Manager_ID INT
 );
 
 CREATE TABLE Customer (
     C_ID INT PRIMARY KEY,
-    Full_Name VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
     Phone VARCHAR(50),
     Email VARCHAR(255),
     Join_Date DATE,
