@@ -1,5 +1,5 @@
 
-SELECT C_ID, Full_Name, Email
+SELECT C_ID, first_name, last_name, Email
 FROM Customer
 WHERE C_ID IN (
     SELECT C_ID FROM Sale WHERE S_ID IN (
@@ -8,15 +8,15 @@ WHERE C_ID IN (
         )
     )
 )
-ORDER BY Full_Name;
+ORDER BY first_name, last_name;
 
-SELECT DISTINCT c.C_ID, c.Full_Name, c.Email, b.Title
+SELECT DISTINCT c.C_ID, c.first_name, c.last_name, b.Title
 FROM Customer c
 JOIN Sale s ON c.C_ID = s.C_ID
 JOIN Sale_Item si ON s.S_ID = si.S_ID
 JOIN Book b ON si.Book_ID = b.Book_ID
 WHERE b.G_ID = 1
-ORDER BY c.Full_Name;
+ORDER BY c.first_name, c.last_name;
 
 SELECT s.S_ID, s.Sale_Date, s.Total_Amount, br.Branch_Name, e.First_Name, e.Last_Name
 FROM Sale s
@@ -99,7 +99,7 @@ ORDER BY Total_Generated_Revenue DESC;
 
 SELECT c.C_ID, c.Full_Name, c.Email, c.Join_Date
 FROM Customer c
-WHERE c.Join_Date < '2026-01-01' -- לקוחות ותיקים יחסית
+WHERE c.Join_Date < '2026-01-01'
   AND NOT EXISTS (
       SELECT 1
       FROM Sale s

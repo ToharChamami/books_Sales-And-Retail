@@ -296,3 +296,470 @@ The backup was tested by restoring it into a new database named `books_restore_t
 ![Backup Process2](screenshot-backup2.png)
 ![Restore Success](screenshot-restore1.png)
 ![Data Verification](screenshot-restore2.png)
+
+
+
+שלב ב
+--
+SELECT
+--
+#1.
+--
+תיאור השאילתא: שליפת רשימת לקוחות (שם ואימייל) שרכשו לפחות ספר אחד המשתייך לז'אנר מסוים (למשל, ז'אנר 1).
+
+קוד השאילתא:
+--
+```sql
+SELECT C_ID, first_name, last_name, Email
+FROM Customer
+WHERE C_ID IN (
+    SELECT C_ID FROM Sale WHERE S_ID IN (
+        SELECT S_ID FROM Sale_Item WHERE Book_ID IN (
+            SELECT Book_ID FROM Book WHERE G_ID = 1
+        )
+    )
+)
+ORDER BY first_name, last_name;
+```
+הרצה ותוצאה:
+--
+
+![img.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/img.png)
+
+קוד השאילתא:
+--
+```sql
+SELECT DISTINCT c.C_ID, c.first_name, c.last_name, c.Email, b.Title
+FROM Customer c
+JOIN Sale s ON c.C_ID = s.C_ID
+JOIN Sale_Item si ON s.S_ID = si.S_ID
+JOIN Book b ON si.Book_ID = b.Book_ID
+WHERE b.G_ID = 1
+ORDER BY c.first_name, c.last_name;
+```
+הרצה ותוצאה:
+--
+![img_1.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/img_1.png)
+
+הסבר יעילות:
+--
+שאילתת JOIN יעילה יותר מ-IN מקונן. השימוש ב-JOIN מאפשר לאופטימייזר לבצע חיבור ישיר של האינדקסים במעבר אחד, בעוד ש-IN מקונן עלול ליצור טבלאות זמניות בזיכרון.
+
+
+#2.
+--
+הצגת עסקאות מעל הממוצע, כולל פרטי העובד והסניף המבצע
+
+קוד השאילתא:
+--
+```sql
+SELECT s.S_ID, s.Sale_Date, s.Total_Amount, br.Branch_Name, e.First_Name, e.Last_Name
+FROM Sale s
+JOIN Employee e ON s.E_ID = e.E_ID
+JOIN Branch br ON e.Branch_ID = br.Branch_ID
+JOIN (SELECT AVG(Total_Amount) AS AvgAmount FROM Sale) AS DerivedTable
+ON s.Total_Amount > DerivedTable.AvgAmount
+ORDER BY s.Total_Amount DESC;
+```
+הרצה ותוצאה:
+--
+
+![img_2.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/img_2.png)
+
+קוד השאילתא:
+--
+```sql
+SELECT b.Book_ID, b.Title, b.Price, g.Genre_Name, b.Author
+FROM Book b
+JOIN Genre g ON b.G_ID = g.G_ID
+WHERE b.Price = (
+    SELECT MAX(b2.Price)
+    FROM Book b2
+    WHERE b2.G_ID = b.G_ID
+)
+ORDER BY g.Genre_Name;
+```
+הרצה ותוצאה:
+--
+![img_3.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/img_3.png)
+
+הסבר יעילות:
+--
+שאילתת JOIN יעילה יותר מ-IN מקונן. השימוש ב-JOIN מאפשר לאופטימייזר לבצע חיבור ישיר של האינדקסים במעבר אחד, בעוד ש-IN מקונן עלול ליצור טבלאות זמניות בזיכרון.
+
+
+
+#3.
+--
+שליפת הספר בעל המחיר הגבוה ביותר לכל קטגוריה ללא שימוש ב-LIMIT.
+
+קוד השאילתא:
+--
+```sql
+SELECT b.Book_ID, b.Title, b.Price, g.Genre_Name, b.Author
+FROM Book b
+JOIN Genre g ON b.G_ID = g.G_ID
+WHERE b.Price = (
+    SELECT MAX(b2.Price)
+    FROM Book b2
+    WHERE b2.G_ID = b.G_ID
+)
+ORDER BY g.Genre_Name;
+
+```
+הרצה ותוצאה:
+--
+![img_4.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/img_4.png)
+
+
+קוד השאילתא:
+--
+```sql
+SELECT b.Book_ID, b.Title, b.Price, g.Genre_Name, b.Author
+FROM Book b
+JOIN Genre g ON b.G_ID = g.G_ID
+JOIN (
+    SELECT G_ID, MAX(Price) AS MaxPrice
+    FROM Book
+    GROUP BY G_ID
+) AS MaxBooks ON b.G_ID = MaxBooks.G_ID AND b.Price = MaxBooks.MaxPrice
+ORDER BY g.Genre_Name;
+```
+הרצה ותוצאה:
+--
+![img_5.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/img_5.png)
+
+הסבר יעילות:
+--
+אפשרות ב' יעילה משמעותית. בשאילתה קורלטיבית (א'), השאילתה הפנימית עלולה לרוץ מחדש עבור כל שורה בטבלת הספרים. ב-ב', מתבצע GROUP BY חד-פעמי על כל הטבלה, והחיבור מתבצע על בסיס סט התוצאות המצומצם.
+
+
+
+
+#4.
+--
+איתור חוסרים במלאי בסניפים הנמצאים בעיר מסוימת (למשל: תל אביב).
+
+קוד השאילתא:
+--
+```sql
+SELECT br.Branch_Name, br.City, b.Title, b.Author, i.Quantity
+FROM Inventory i
+JOIN Branch br ON i.Branch_ID = br.Branch_ID
+JOIN Book b ON i.Book_ID = b.Book_ID
+WHERE i.Quantity = 0 AND br.City = 'Tel Aviv'
+ORDER BY br.Branch_Name;
+
+```
+הרצה ותוצאה:
+--
+![img_6.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/img_6.png)
+
+קוד השאילתא:
+--
+```sql
+SELECT br.Branch_Name, br.City, b.Title, b.Author, i.Quantity
+FROM Inventory i
+JOIN Book b ON i.Book_ID = b.Book_ID
+JOIN Branch br ON i.Branch_ID = br.Branch_ID
+WHERE i.Quantity = 0 AND i.Branch_ID IN (
+    SELECT Branch_ID
+    FROM Branch
+    WHERE City = 'Tel Aviv'
+)
+ORDER BY br.Branch_Name;
+```
+הרצה ותוצאה:
+--
+![img_7.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/img_7.png)
+
+הסבר יעילות:
+--
+
+שאילתא א' לרוב עדיפה מכיוון שהיא עושה שימוש ישיר ב-Foreign Keys. עם זאת, שאילתא ב' עשויה להיות יעילה יותר בבסיסי נתונים גדולים מאוד אם הסינון של ה-City מקטין משמעותית את כמות הרשומות הנסרקות בתוך ה-JOIN המרכזי.
+
+
+#5.
+--
+הפקת דוח המציג את כמות המכירות וההכנסות הכוללות בכל חודש עבור כל סניף בנפרד.
+קוד השאילתא:
+--
+```sql
+SELECT
+    EXTRACT(YEAR FROM s.Sale_Date) AS Sale_Year,
+    EXTRACT(MONTH FROM s.Sale_Date) AS Sale_Month,
+    br.Branch_Name,
+    COUNT(s.S_ID) AS Total_Sales_Count,
+    SUM(s.Total_Amount) AS Total_Revenue
+FROM Sale s
+JOIN Employee e ON s.E_ID = e.E_ID
+JOIN Branch br ON e.Branch_ID = br.Branch_ID
+GROUP BY
+    EXTRACT(YEAR FROM s.Sale_Date),
+    EXTRACT(MONTH FROM s.Sale_Date),
+    br.Branch_Name
+ORDER BY
+    Sale_Year DESC,
+    Sale_Month DESC,
+    Total_Revenue DESC;
+
+```
+הרצה ותוצאה:
+--
+![img_8.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/img_8.png)
+
+
+#6.
+--
+זיהוי עובדים מצטיינים אשר הניבו הכנסות מצטברות הגבוהות מ-5,000 ש"ח.
+קוד השאילתא:
+--
+```sql
+
+SELECT e.E_ID, e.First_Name, e.Last_Name, br.Branch_Name, COUNT(s.S_ID) AS Number_Of_Sales, SUM(s.Total_Amount) AS Total_Generated_Revenue
+FROM Employee e
+JOIN Sale s ON e.E_ID = s.E_ID
+JOIN Branch br ON e.Branch_ID = br.Branch_ID
+GROUP BY e.E_ID, e.First_Name, e.Last_Name, br.Branch_Name
+HAVING SUM(s.Total_Amount) > 5000.00
+ORDER BY Total_Generated_Revenue DESC;
+
+
+```
+הרצה ותוצאה:
+--
+![img_9.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/img_9.png)
+
+
+
+#7.
+--
+איתור לקוחות שנרשמו לפני שנת 2026 אך מעולם לא ביצעו רכישה ברשת.
+
+קוד השאילתא:
+--
+```sql
+
+SELECT c.C_ID, c.Full_Name, c.Email, c.Join_Date
+FROM Customer c
+WHERE c.Join_Date < '2026-01-01'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM Sale s
+      WHERE s.C_ID = c.C_ID
+  )
+ORDER BY c.Join_Date ASC;
+
+
+```
+הרצה ותוצאה:
+--
+![img_10.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/img_10.png)
+
+
+#8.
+--
+ספירת כמות הספרים הייחודיים וסך המלאי הקיים בכל רשת, מחולק לפי מוציא לאור וסוג הז'אנר.
+
+קוד השאילתא:
+--
+```sql
+
+SELECT p.Publisher_Name, g.Genre_Name, COUNT(DISTINCT b.Book_ID) AS Distinct_Books_Count, SUM(i.Quantity) AS Total_Stock_In_Network
+FROM Book b
+JOIN Publisher p ON b.P_ID = p.P_ID
+JOIN Genre g ON b.G_ID = g.G_ID
+JOIN Inventory i ON b.Book_ID = i.Book_ID
+GROUP BY p.Publisher_Name, g.Genre_Name
+ORDER BY p.Publisher_Name, Total_Stock_In_Network DESC;
+
+
+
+```
+הרצה ותוצאה:
+--
+![img_11.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/img_11.png)
+
+
+
+UPDATE
+--
+
+
+1. עדכון מחיר לספרים (העלאת מחירים של 10% לכל הספרים בז'אנר מסוים, למשל פנטזיה שזה קוד 1):
+
+```sql
+UPDATE book
+SET current_price = current_price * 1.10
+WHERE g_id = 1;
+```
+before:
+![update1 before.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/update1%20before.png)
+
+after:
+![update1 after.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/update1%20after.png)
+
+
+
+2. עדכון מלאי (הגיעה סחורה חדשה לסניף 1 עבור ספר 1, מוסיפים 10 עותקים):
+
+```sql
+UPDATE inventory
+SET quantity = quantity + 10
+WHERE branch_id = 1 AND book_id = 1;
+```
+before:
+![update2 before.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/update2%20before.png)
+
+after:
+![update2 after.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/update2%20after.png)
+
+
+
+3. עדכון כתובת אימייל של לקוח (לקוח 901 שקודם הכנסנו):
+```sql
+UPDATE customer
+SET email = 'yossi.new.email@email.com'
+WHERE c_id = 901;
+```
+before:
+![update3 before.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/update3%20before.png)
+after:
+![update3 after.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/update3%20after.png)
+
+
+
+DELETE
+--
+1. מחיקת לקוח (נמחק את אחת מהלקוחות הפיקטיביות שהוספנו קודם, מיכל, כי היא מעולם לא קנתה כלום ואין לה היסטוריה שחוסמת מחיקה):
+
+```sql
+UPDATE inventory 
+SET quantity = quantity + 10 
+WHERE branch_id = 1 AND book_id = 1;
+```
+before:
+![delete1 before.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/delete1%20before.png)
+after:
+![delete1 after.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/delete1%20after.png)
+
+
+2. מחיקת רשומת מלאי שאזל (ניקוי מלאי של 0 עותקים מסניף 1):
+
+```sql
+DELETE FROM inventory 
+WHERE quantity = 0 AND branch_id = 1;
+```
+
+before:
+![delete2 before.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/delete2%20before.png)
+after:
+![delete2 after.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/delete2%20after.png)
+
+
+3. מחיקת לקוח נוסף (נמחק גם את דוד שהוספנו קודם):
+
+```sql
+DELETE FROM customer 
+WHERE c_id = 903;
+```
+
+before:
+![delete3 before.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/delete3%20before.png)
+
+after:
+![delete3 after.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/delete3%20after.png)
+
+CONSTRAINTS:
+--
+ אילוץ 1: מחיר ספר חייב להיות חיובי
+
+```sql
+ALTER TABLE book ADD CONSTRAINT chk_positive_price CHECK (current_price > 0);
+```
+![alter table1.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/alter%20table1.png)
+אילוץ 2: כמות במלאי לא יכולה להיות שלילית
+```sql
+ALTER TABLE inventory ADD CONSTRAINT chk_non_negative_quantity CHECK (quantity >= 0);
+```
+![alter table2.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/alter%20table2.png)
+אילוץ 3: אימייל של לקוח חייב להכיל שטרודל
+```sql
+ALTER TABLE customer ADD CONSTRAINT chk_valid_email CHECK (email LIKE '%@%');
+```
+![alter table3.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/alter%20table3.png)
+
+ROLLBACK
+--
+```
+SELECT book_id, title, current_price FROM book WHERE book_id = 1;
+```
+![rollback1-1.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/rollback1-1.png)
+```
+BEGIN;
+UPDATE book SET current_price = current_price + 50 WHERE book_id = 1;
+```
+```
+SELECT book_id, title, current_price FROM book WHERE book_id = 1;
+```
+![rollback1-2.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/rollback1-2.png)
+```
+ROLLBACK;
+```
+```
+SELECT book_id, title, current_price FROM book WHERE book_id = 1;
+```
+![rollback1-3.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/rollback1-3.png)
+
+COMMIT
+--
+```
+SELECT book_id, title, current_price FROM book WHERE book_id = 2;```
+```
+![commit1-1.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/commit1-1.png)
+```
+BEGIN;
+UPDATE book SET current_price = current_price - 10 WHERE book_id = 2;
+```
+```
+SELECT book_id, title, current_price FROM book WHERE book_id = 2;```
+```
+![commit1-2.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/commit1-2.png)
+```
+COMMIT;
+```
+```
+SELECT book_id, title, current_price FROM book WHERE book_id = 2;```
+```
+![commit1-3.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/commit1-3.png)
+
+INDEX
+--
+ 1. אינדקס על תאריך המכירה (עוזר מאוד לשאילתות של דוחות חודשיים/שנתיים)
+
+האינדקס מאפשר למסד הנתונים לבצע Index Scan במקום Sequential Scan (סריקה של כל הטבלה), מה שמקצר משמעותית את זמן הגישה לשורות הרלוונטיות.
+
+![index1-1.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/index1-1.png)
+```
+CREATE INDEX idx_sale_date ON sale(sale_date);
+```
+![index1-2.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/index1-2.png)
+
+ 2. אינדקס על שם הספר (עוזר כשלקוחות או עובדים מחפשים ספר לפי כותרת)
+
+בטבלאות עם כמות גדולה של ספרים, חיפוש מחרוזת ללא אינדקס הוא פעולה יקרה. האינדקס מספק כתובת ישירה לרשומה.
+
+![index2-1.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/index2-1.png)
+```
+CREATE INDEX idx_book_title ON book(title);
+```
+![index2-2.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/index2-2.png)
+ 3. אינדקס על אימייל הלקוח (עוזר לאיתור מהיר של כרטיס לקוח במערכת)
+
+עמודת האימייל היא ייחודית (Unique). אינדקס עליה מבטיח שליפה כמעט מיידית, גם כשהטבלה מכילה אלפי לקוחות.
+
+![index3-1.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/index3-1.png)
+```
+CREATE INDEX idx_customer_email ON customer(email);
+```
+![index3-2.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/index3-2.png)

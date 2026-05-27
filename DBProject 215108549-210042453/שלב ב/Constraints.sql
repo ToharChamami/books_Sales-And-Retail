@@ -1,4 +1,3 @@
--- אילוץ 1: מחיר ספר חייב להיות חיובי
 ALTER TABLE book ADD CONSTRAINT chk_positive_price CHECK (current_price > 0);
 
 -- אילוץ 2: כמות במלאי לא יכולה להיות שלילית
