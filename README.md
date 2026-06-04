@@ -37,12 +37,12 @@ The goal is to understand the business needs and data flow before building the d
 Below is the characterization of the four screens.
 
 
-![img.png](img.png)
-![img_1.png](img_1.png)
-![img_2.png](img_2.png)
-![img_3.png](img_3.png)
-![img_4.png](img_4.png)
-![img_5.png](img_5.png)
+![img.png](DBProject 215108549-210042453/שלב א/img.png)
+![img_1.png](DBProject 215108549-210042453/שלב א/img_1.png)
+![img_2.png](DBProject 215108549-210042453/שלב א/img_2.png)
+![img_3.png](DBProject 215108549-210042453/שלב א/img_3.png)
+![img_4.png](DBProject 215108549-210042453/שלב א/img_4.png)
+![img_5.png](DBProject 215108549-210042453/שלב א/img_5.png)
 
 
 
@@ -763,3 +763,70 @@ CREATE INDEX idx_book_title ON book(title);
 CREATE INDEX idx_customer_email ON customer(email);
 ```
 ![index3-2.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%91/index3-2.png)
+
+חלק ג: אינטגרציה ומבטים
+--
+### ERD של האגף החדש: ###
+
+### DSD של האגף החדש: ###
+
+### אלגוריתם הנדוס לאחור (Reverse Engineering): ###
+
+זיהוי ישויות (Entities): נסרוק את כל הטבלאות בבסיס הנתונים שקיבלנו. כל טבלה עצמאית (שאינה טבלת קישור) תוגדר כישות בתרשים ה-ERD.
+
+זיהוי תכונות (Attributes): עבור כל ישות, נמפה את העמודות בטבלה כתכונות של הישות. המפתח הראשי (Primary Key) של הטבלה יסומן כתכונה המזהה (המודגשת בקו).
+
+זיהוי קשרים (Relationships) מסוג 1:N (יחיד לרבים): נחפש עמודות שהן מפתחות זרים (Foreign Keys). נסיר אותן מרשימת התכונות של הישות, ובמקומן נמתח קשר מסוג 1:N אל הטבלה שממנה נלקח המפתח (הצד של ה-1 יהיה בטבלת האב, והצד של ה-N יהיה בטבלה המכילה את המפתח הזר).
+
+זיהוי קשרים מסוג N:M (רבים לרבים): נאתר טבלאות קישור (טבלאות שהמפתח הראשי שלהן מורכב משני מפתחות זרים או יותר, כגון טבלת פריטי הזמנה). נהפוך טבלאות אלו לקשר מעוין מסוג N:M המקשר בין שתי ישויות האב.
+
+### ERD משותף: ###
+```
+-- === 1. הכנת הטבלאות וקישורן ===
+-- הוספת העמודות החדשות מהמערכת השנייה לטבלת הספרים שלנו
+ALTER TABLE book
+ADD COLUMN publication_year INT,
+ADD COLUMN publisher_id INT;
+
+-- יצירת מפתח זר שמקשר את הספרים שלנו להוצאות לאור
+ALTER TABLE book
+ADD CONSTRAINT fk_publisher
+FOREIGN KEY (publisher_id)
+REFERENCES publishers(publisher_id);
+
+-- === 2. העברת נתונים חסרים (כדי למנוע שגיאות מפתח זר) ===
+-- העברת כל הספרים של הזוג השני שחסרים אצלנו, תוך מתן מחיר ברירת מחדל של 50
+INSERT INTO book (book_id, title, author, publication_year, publisher_id, current_price)
+SELECT book_id, title, author, publication_year, publisher_id, 50
+FROM books
+WHERE book_id NOT IN (SELECT book_id FROM book);
+
+-- העברת כל העובדים החדשים שחסרים אצלנו (מותאם לעמודת e_id שלך)
+INSERT INTO employee (e_id, first_name, last_name)
+SELECT employee_id, first_name, last_name
+FROM employees
+WHERE employee_id NOT IN (SELECT e_id FROM employee);
+
+-- === 3. הניקיון הסופי: מחיקת הטבלאות הכפולות וחיבור החוטים מחדש ===
+-- טיפול בספרים
+DROP TABLE IF EXISTS books CASCADE;
+ALTER TABLE stored_in ADD CONSTRAINT fk_book_unified FOREIGN KEY (book_id) REFERENCES book(book_id);
+
+-- טיפול בעובדים
+DROP TABLE IF EXISTS employees CASCADE;
+ALTER TABLE purchase_orders ADD CONSTRAINT fk_emp_unified FOREIGN KEY (employee_id) REFERENCES employee(e_id);
+
+DROP TABLE IF EXISTS publisher CASCADE;
+```
+
+### DSD לאחר אינטגרציה: ###
+
+### החלטות שנעשו בשלב האינטגרציה (עיצוב ה-ERD המשולב): ###
+
+בתהליך האינטגרציה בין מערכת "מכירות חנות הספרים" לבין מערכת "ניהול רכש ומחסנים", קיבלנו את ההחלטות העיצוביות הבאות:
+
+איחוד ישויות חופפות (Entity Resolution): זיהינו כי הישות Book קיימת בשתי המערכות. החלטנו לאחד אותן לישות אחת מרכזית. הישות המאוחדת מכילה כעת את כלל התכונות: נתוני מכירה (מחיר, ז'אנר) מתוך המערכת המקורית, ונתוני רכש (סופר, שנת הוצאה, הוצאה לאור) מתוך המערכת החדשה.
+
+שילוב מערכות מלאי מבוזרות: המערכת המקורית ניהלה מלאי ברמת ה"סניף" (inventory), בעוד המערכת החדשה ניהלה מלאי ברמת "מחסן מרכזי" (stored_in). החלטנו להשאיר את שתי הישויות נפרדות אך מקושרות לאותו עץ מוצר (Book), מתוך הבנה עסקית שמחסנים מרכזיים (Warehouses) מקבלים סחורה מהספקים, והסניפים המקומיים (Branches) מושכים את המלאי למכירה ללקוחות הקצה.
+
+טיפול במפתחות זרים כפולים: בתהליך האיחוד של טבלת הספרים, וידאנו שהמפתח הראשי (book_id) יהיה אחיד וישמש כמזהה גלובלי (Global ID) בשתי תתי-המערכות כדי למנוע יתירות נתונים.
