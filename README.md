@@ -3,7 +3,9 @@ Eden Naomi-Hashay 210042453
 
 # books_Sales-And-Retail
 
-1.Introduction and System Description.
+
+1
+.Introduction and System Description.
 
 2.System analysis TOP DOWN
 
@@ -898,3 +900,269 @@ SELECT * FROM v_purchase_logistics WHERE "Supplier Name" = 'Penguin';
 ```
 SELECT * FROM v_purchase_logistics ORDER BY "Date" DESC;
 ```
+
+ דוח שלב ד' (תכנות ב-PL/pgSQL)
+
+1. פונקציה 1: חישוב שווי מלאי של הוצאה לאור (fn_calculate_publisher_stock_value)
+תיאור: הפונקציה מקבלת מזהה של הוצאה לאור, משתמשת בסמן מפורש (Explicit Cursor) ובלולאה כדי לעבור על כל ספרי ההוצאה, ומחשבת את שווי המלאי הכולל שלהם. הפונקציה כוללת הסתעפויות וזורקת חריגה (Exception) מותאמת אישית אם ההוצאה לא קיימת.
+
+קוד הפונקציה:
+
+```
+CREATE OR REPLACE FUNCTION fn_calculate_publisher_stock_value(p_publisher_id INT)
+RETURNS NUMERIC AS $$
+DECLARE
+    cur_books CURSOR FOR 
+        SELECT b.book_id, b.title, b.current_price, COALESCE(SUM(s.quantity), 0) as total_qty
+        FROM book b
+        LEFT JOIN stored_in s ON b.book_id = s.book_id
+        WHERE b.publisher_id = p_publisher_id
+        GROUP BY b.book_id, b.title, b.current_price;
+        
+    r_book RECORD;
+    v_total_value NUMERIC := 0;
+    v_publisher_exists INT;
+BEGIN
+    SELECT COUNT(*) INTO v_publisher_exists FROM publishers WHERE publisher_id = p_publisher_id;
+    
+    IF v_publisher_exists = 0 THEN
+        RAISE EXCEPTION 'Publisher with ID % does not exist.', p_publisher_id;
+    END IF;
+
+    OPEN cur_books;
+    LOOP
+        FETCH cur_books INTO r_book;
+        EXIT WHEN NOT FOUND;
+        
+        IF r_book.current_price IS NULL OR r_book.current_price <= 0 THEN
+            RAISE NOTICE 'Book % (ID: %) has an invalid price. Skipping.', r_book.title, r_book.book_id;
+        ELSE
+            v_total_value := v_total_value + (r_book.current_price * r_book.total_qty);
+        END IF;
+    END LOOP;
+    CLOSE cur_books;
+
+    RETURN v_total_value;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE NOTICE 'An error occurred in execution: %', SQLERRM;
+        RETURN -1;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+הוכחת הרצה:
+![func1.1.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%93/func1.1.png)
+![func1.2.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%93/func1.2.png)
+
+2. פונקציה 2: איתור חוסרים במלאי (fn_get_low_stock_books)
+תיאור: הפונקציה מקבלת כמות מינימלית, ומחזירה סמן (Ref Cursor) המכיל את כל הספרים שהכמות שלהם במלאי נמוכה מהסף שהוגדר.
+
+קוד הפונקציה:
+
+```
+CREATE OR REPLACE FUNCTION fn_get_low_stock_books(p_min_quantity INT)
+RETURNS refcursor AS $$
+DECLARE
+    ref_cur refcursor := 'my_cursor';
+BEGIN
+    OPEN ref_cur FOR 
+        SELECT b.book_id, b.title, COALESCE(SUM(i.quantity), 0) AS total_qty
+        FROM book b
+        LEFT JOIN inventory i ON b.book_id = i.book_id
+        GROUP BY b.book_id, b.title
+        HAVING COALESCE(SUM(i.quantity), 0) < p_min_quantity
+        ORDER BY total_qty ASC;
+        
+    RETURN ref_cur;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+הוכחת הרצה:
+![func2.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%93/func2.png)
+
+3. פרוצדורה 1: עדכון מחירים גורף (sp_update_publisher_prices)
+תיאור: הפרוצדורה מבצעת פקודת DML של עדכון מחירים (UPDATE) לספרים של הוצאה לאור מסוימת באחוז שמוגדר לה. היא בודקת כמה רשומות עודכנו, וזורקת חריגה אם לא נמצאו ספרים לעדכון.
+
+קוד הפרוצדורה:
+
+```
+CREATE OR REPLACE PROCEDURE sp_update_publisher_prices(p_publisher_id INT, p_percent_increase NUMERIC)
+LANGUAGE plpgsql AS $$
+DECLARE
+    v_rows_updated INT;
+BEGIN
+    UPDATE book
+    SET current_price = current_price * (1 + (p_percent_increase / 100.0))
+    WHERE publisher_id = p_publisher_id;
+
+    GET DIAGNOSTICS v_rows_updated = ROW_COUNT;
+
+    IF v_rows_updated = 0 THEN
+        RAISE EXCEPTION 'No books found for publisher ID % to update.', p_publisher_id;
+    ELSE
+        RAISE NOTICE 'Successfully updated prices for % books.', v_rows_updated;
+    END IF;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE NOTICE 'Error during price update: %', SQLERRM;
+END;
+$$;
+```
+
+הוכחת הרצה:
+![pro1.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%93/pro1.png)
+
+4. פרוצדורה 2: תהליך מכירת ספר (sp_process_book_sale)
+תיאור: הפרוצדורה משתמשת בסמן מרומז (Implicit Cursor בעזרת SELECT INTO) כדי לבדוק את המלאי הקיים לספר מבוקש. אם יש מלאי מספיק, היא מפחיתה אותו בעזרת פקודת DML. אם אין מספיק מלאי, היא זורקת חריגה (Exception).
+
+קוד הפרוצדורה:
+
+```
+CREATE OR REPLACE PROCEDURE sp_process_book_sale(p_book_id INT, p_qty_sold INT)
+LANGUAGE plpgsql AS $$
+DECLARE
+    v_current_stock INT;
+BEGIN
+    SELECT quantity INTO v_current_stock 
+    FROM inventory 
+    WHERE book_id = p_book_id;
+
+    IF v_current_stock IS NULL THEN
+        v_current_stock := 0;
+    END IF;
+
+    IF v_current_stock < p_qty_sold THEN
+        RAISE EXCEPTION 'Not enough stock to complete the sale. In stock: %, Requested: %', v_current_stock, p_qty_sold;
+    END IF;
+
+    UPDATE inventory
+    SET quantity = quantity - p_qty_sold
+    WHERE book_id = p_book_id;
+
+    RAISE NOTICE 'Sale processed successfully! Sold % copies of book ID %.', p_qty_sold, p_book_id;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE NOTICE 'Sale Transaction failed: %', SQLERRM;
+END;
+$$;
+```
+
+הוכחת הרצה:
+![pro2.1.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%93/pro2.1.png)
+![pro2.2.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%93/pro2.2.png)
+
+5. טריגר 1 (UPDATE): היסטוריית מחירי ספרים
+תיאור: טריגר המופעל לאחר פקודת UPDATE על המחיר בטבלת הספרים. הוא משווה את המחיר הישן לחדש, ואם היה שינוי, הוא מתעד אותו אוטומטית בטבלת לוג (price_audit_log) לצורכי מעקב.
+
+קוד הטריגר:
+
+```
+CREATE OR REPLACE FUNCTION trg_log_price_change()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.current_price <> OLD.current_price THEN
+        INSERT INTO price_audit_log (book_id, old_price, new_price)
+        VALUES (OLD.book_id, OLD.current_price, NEW.current_price);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER after_book_price_update
+AFTER UPDATE OF current_price ON book
+FOR EACH ROW
+EXECUTE FUNCTION trg_log_price_change();
+```
+
+הוכחת הרצה:
+![triger1.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%93/triger1.png)
+
+6. טריגר 2 (INSERT): יצירת רשומת מלאי אוטומטית
+תיאור: טריגר המופעל לאחר INSERT של ספר חדש לקטלוג. כדי למנוע חוסר תאימות בעתיד, הוא מאתר אוטומטית מזהה סניף תקין, ויוצר עבור הספר החדש רשומה בטבלת המלאי עם כמות ראשונית של 0 עותקים.
+
+קוד הטריגר:
+
+```
+CREATE OR REPLACE FUNCTION trg_auto_init_inventory()
+RETURNS TRIGGER AS $$
+DECLARE
+    v_first_branch_id INT;
+BEGIN
+    SELECT branch_id INTO v_first_branch_id FROM branch LIMIT 1;
+    
+    IF v_first_branch_id IS NULL THEN
+        v_first_branch_id := 1;
+    END IF;
+
+    INSERT INTO inventory (branch_id, book_id, quantity)
+    VALUES (v_first_branch_id, NEW.book_id, 0);
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER after_new_book_insert
+AFTER INSERT ON book
+FOR EACH ROW
+EXECUTE FUNCTION trg_auto_init_inventory();
+```
+
+הוכחת הרצה:
+![triger2.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%93/triger2.png)
+
+7. תוכניות ראשיות (DO Blocks)
+תיאור: שתי תוכניות ראשיות אנונימיות המשלבות קריאה לפונקציות ולפרוצדורות. התוכנית הראשונה בודקת שווי מלאי של הוצאה לאור, מפעילה עדכון מחירים, ובודקת את השווי מחדש. התוכנית השנייה מדמה סוף יום: ביצוע מכירה, קריאה לסמן של מלאי נמוך, והדפסת אזהרה.
+
+קוד התוכניות:
+
+```
+-- תוכנית ראשית 1: עדכון שווי מלאי של הוצאה לאור
+DO $$
+DECLARE
+    v_publisher_id INT := 1; 
+    v_total_value NUMERIC;
+BEGIN
+    v_total_value := fn_calculate_publisher_stock_value(v_publisher_id);
+    RAISE NOTICE 'Stock value BEFORE price update: %', v_total_value;
+    
+    CALL sp_update_publisher_prices(v_publisher_id, 5.0);
+    
+    v_total_value := fn_calculate_publisher_stock_value(v_publisher_id);
+    RAISE NOTICE 'Stock value AFTER price update: %', v_total_value;
+END;
+$$;
+
+-- תוכנית ראשית 2: ביצוע מכירה ובדיקת חוסרים
+DO $$
+DECLARE
+    v_ref_cursor refcursor;
+    v_book_id INT;
+    v_title VARCHAR;
+    v_qty BIGINT;
+BEGIN
+    RAISE NOTICE '--- Processing Daily Sale ---';
+    CALL sp_process_book_sale(101, 1);
+    
+    RAISE NOTICE '--- Checking For Low Stock ---';
+    v_ref_cursor := fn_get_low_stock_books(20);
+    
+    FETCH NEXT FROM v_ref_cursor INTO v_book_id, v_title, v_qty;
+    
+    IF FOUND THEN
+        RAISE NOTICE 'ALERT: Book "%" (ID: %) has low stock! Only % copies left.', v_title, v_book_id, v_qty;
+    ELSE
+        RAISE NOTICE 'All books have sufficient stock today.';
+    END IF;
+    CLOSE v_ref_cursor;
+END;
+$$;
+```
+
+הוכחת הרצה:
+![main1.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%93/main1.png)
+![main2.png](DBProject%20215108549-210042453/%D7%A9%D7%9C%D7%91%20%D7%93/main2.png)
