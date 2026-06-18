@@ -14,43 +14,71 @@ class MainApp(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title(fix_heb("מערכת ניהול רשת ספרים - מסך ראשי"))
-        self.geometry("600x450")
+        self.title(fix_heb("מערכת ERP מלאה - רשת הספרים"))
+        self.geometry("1100x750")
 
-        self.title_label = ctk.CTkLabel(self, text=fix_heb("ברוכים הבאים למערכת הרשת המאוחדת"),
-                                        font=ctk.CTkFont(size=24, weight="bold"))
-        self.title_label.pack(pady=40)
+        self.title_label = ctk.CTkLabel(self, text=fix_heb("לוח בקרה ראשי (ERP)"),
+                                        font=ctk.CTkFont(size=28, weight="bold"))
+        self.title_label.pack(pady=20)
 
-        # כפתור 1
-        self.btn_crud = ctk.CTkButton(self, text=fix_heb("ניהול ספרים ומלאי (CRUD)"), font=ctk.CTkFont(size=16),
-                                      width=300, height=45, command=self.open_crud_window)
-        self.btn_crud.pack(pady=15)
+        self.btn_frame = ctk.CTkFrame(self, fg_color="transparent")
+        self.btn_frame.pack(pady=10)
 
-        # כפתור 2
-        self.btn_queries = ctk.CTkButton(self, text=fix_heb("דוחות ושאילתות מערכת"), font=ctk.CTkFont(size=16),
-                                         width=300, height=45, command=self.open_queries_window)
-        self.btn_queries.pack(pady=15)
+        # --- טור 1: קטלוג וספרים ---
+        ctk.CTkLabel(self.btn_frame, text=fix_heb("קטלוג ומלאי"), font=ctk.CTkFont(size=18, weight="bold")).grid(row=0,
+                                                                                                                 column=3,
+                                                                                                                 pady=10)
+        ctk.CTkButton(self.btn_frame, text=fix_heb("ספרים (Book)"), width=220, height=40,
+                      command=lambda: self.open_window("crud_books.py")).grid(row=1, column=3, padx=15, pady=10)
+        ctk.CTkButton(self.btn_frame, text=fix_heb("הוצאות לאור (Publishers)"), width=220, height=40,
+                      command=lambda: self.open_window("crud_publishers.py")).grid(row=2, column=3, padx=15, pady=10)
+        ctk.CTkButton(self.btn_frame, text=fix_heb("ז'אנרים (Genre)"), width=220, height=40,
+                      command=lambda: self.open_window("crud_genre.py")).grid(row=3, column=3, padx=15, pady=10)
+        ctk.CTkButton(self.btn_frame, text=fix_heb("מלאי (Inventory)"), width=220, height=40,
+                      command=lambda: self.open_window("crud_inventory.py")).grid(row=4, column=3, padx=15, pady=10)
 
-        # כפתור 3
-        self.btn_procedures = ctk.CTkButton(self, text=fix_heb("פעולות אוטומטיות (פרוצדורות)"),
-                                            font=ctk.CTkFont(size=16), width=300, height=45,
-                                            command=self.open_procedures_window)
-        self.btn_procedures.pack(pady=15)
+        # --- טור 2: ארגון ומשאבי אנוש ---
+        ctk.CTkLabel(self.btn_frame, text=fix_heb("ארגון ומשאבים"), font=ctk.CTkFont(size=18, weight="bold")).grid(
+            row=0, column=2, pady=10)
+        ctk.CTkButton(self.btn_frame, text=fix_heb("סניפים (Branch)"), width=220, height=40,
+                      command=lambda: self.open_window("crud_branches.py")).grid(row=1, column=2, padx=15, pady=10)
+        ctk.CTkButton(self.btn_frame, text=fix_heb("עובדים (Employee)"), width=220, height=40,
+                      command=lambda: self.open_window("crud_employee.py")).grid(row=2, column=2, padx=15, pady=10)
+        ctk.CTkButton(self.btn_frame, text=fix_heb("תפקידים (Position)"), width=220, height=40,
+                      command=lambda: self.open_window("crud_position.py")).grid(row=3, column=2, padx=15, pady=10)
+        ctk.CTkButton(self.btn_frame, text=fix_heb("לקוחות (Customer)"), width=220, height=40,
+                      command=lambda: self.open_window("crud_customer.py")).grid(row=4, column=2, padx=15, pady=10)
 
-        # כפתור יציאה
+        # --- טור 3: לוגיסטיקה (ספקים ומחסנים) ---
+        ctk.CTkLabel(self.btn_frame, text=fix_heb("לוגיסטיקה"), font=ctk.CTkFont(size=18, weight="bold")).grid(row=0,
+                                                                                                               column=1,
+                                                                                                               pady=10)
+        ctk.CTkButton(self.btn_frame, text=fix_heb("מחסנים (Warehouses)"), width=220, height=40,
+                      command=lambda: self.open_window("crud_warehouses.py")).grid(row=1, column=1, padx=15, pady=10)
+        ctk.CTkButton(self.btn_frame, text=fix_heb("ספקים (Suppliers)"), width=220, height=40,
+                      command=lambda: self.open_window("crud_suppliers.py")).grid(row=2, column=1, padx=15, pady=10)
+
+        # --- טור 4: דוחות מיוחדים (שלב ב+ד) ---
+        ctk.CTkLabel(self.btn_frame, text=fix_heb("פעולות מתקדמות"), font=ctk.CTkFont(size=18, weight="bold")).grid(
+            row=0, column=0, pady=10)
+        ctk.CTkButton(self.btn_frame, text=fix_heb("דוחות מערכת (READ)"), width=220, height=40, fg_color="#E67E22",
+                      hover_color="#D35400", command=lambda: self.open_window("reports_window.py")).grid(row=1,
+                                                                                                         column=0,
+                                                                                                         padx=15,
+                                                                                                         pady=10)
+        ctk.CTkButton(self.btn_frame, text=fix_heb("הפעלת פרוצדורות שרת"), width=220, height=40, fg_color="#E67E22",
+                      hover_color="#D35400", command=lambda: self.open_window("procedures_window.py")).grid(row=2,
+                                                                                                            column=0,
+                                                                                                            padx=15,
+                                                                                                            pady=10)
+
+        # יציאה
         self.btn_exit = ctk.CTkButton(self, text=fix_heb("יציאה מהמערכת"), font=ctk.CTkFont(size=16), width=300,
                                       height=45, fg_color="#C21807", hover_color="#8B0000", command=self.destroy)
-        self.btn_exit.pack(pady=30)
+        self.btn_exit.pack(pady=40)
 
-    # --- פונקציות הניווט (הפעם מריצות את הקבצים כתוכנות נפרדות) ---
-    def open_crud_window(self):
-        subprocess.Popen([sys.executable, "crud_books.py"])
-
-    def open_queries_window(self):
-        subprocess.Popen([sys.executable, "reports_window.py"])
-
-    def open_procedures_window(self):
-        subprocess.Popen([sys.executable, "procedures_window.py"])
+    def open_window(self, filename):
+        subprocess.Popen([sys.executable, filename])
 
 
 if __name__ == "__main__":

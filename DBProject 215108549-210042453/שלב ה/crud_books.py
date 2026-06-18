@@ -93,7 +93,7 @@ class CrudWindow(ctk.CTk):
         try:
             cursor = conn.cursor()
             # שליפה שמציגה את הנתונים בצורה יפה (שולמית תאהב את זה)
-            cursor.execute("SELECT book_id, title, author, current_price FROM book ORDER BY book_id DESC LIMIT 20;")
+            cursor.execute("SELECT book_id, title, author, current_price FROM book ORDER BY book_id DESC;")
             rows = cursor.fetchall()
 
             self.textbox.delete("1.0", "end")  # ניקוי המסך
